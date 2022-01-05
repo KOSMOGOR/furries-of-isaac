@@ -111,11 +111,25 @@ function FurriesOfIsaac:onPlayerInit(player)
         player:GetSprite():ReplaceSpritesheet(0, "gfx1/characters/costumes/character_001_isaac.png")
         player:GetSprite():LoadGraphics()
     end
+
     if player:GetPlayerType() == PlayerType.PLAYER_MAGDALENA and RebirthSettings["Magdalene"] then
         player:GetSprite():Load("gfx1/001.000_player.anm2", false)
         ChangeCharacter(player:GetSprite(), "gfx1/characters/costumes/character_002_magdalene.png")
         player:GetSprite():LoadGraphics()
         player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx1/characters/character_002_magdalenehead.anm2"))
+    end
+
+    if player:GetPlayerType() == PlayerType.PLAYER_JACOB and ABRepSettings["J&E"] then
+        player:GetSprite():Load("gfx1/001.000_player.anm2", false)
+        ChangeCharacter(player:GetSprite(), "gfx1/characters/costumes/character_002x_jacob.png")
+        player:GetSprite():LoadGraphics()
+        player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx1/characters/character_002x_jacobhead.anm2"))
+    end
+    if player:GetPlayerType() == PlayerType.PLAYER_ESAU and ABRepSettings["J&E"] then
+        player:GetSprite():Load("gfx1/001.000_player.anm2", false)
+        ChangeCharacter(player:GetSprite(), "gfx1/characters/costumes/character_003x_esau.png")
+        player:GetSprite():LoadGraphics()
+        player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx1/characters/character_003x_esauhead.anm2"))
     end
 end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.onPlayerInit)

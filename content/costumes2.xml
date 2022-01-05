@@ -1,15 +1,17 @@
 <costumes anm2root="gfx1/characters/">
 	<costume anm2path="character_002_magdalenehead.anm2" type="none" priority="99" />
-	<costume anm2path="Character_002_MagdaleneHead.anm2" type="none" priority="99" />
-	<costume anm2path="Character_003_cainsEyepatch.anm2" type="none" priority="99" />
-	<costume anm2path="Character_004_JudasFez.anm2" type="none" priority="99" />
-	<costume anm2path="Character_005_EveHead.anm2" type="none" priority="99" hasSkinAlt="true" />
-	<costume anm2path="Character_007_SamsonHead.anm2" type="none" priority="99" />
-	<costume anm2path="Character_008_AzazelHead.anm2" type="none" priority="23" skinColor="1" isFlying="true" overwriteColor="true" />
-	<costume anm2path="Character_009_EdenHair1.anm2" type="none" priority="99" />
-	<costume anm2path="Character_LazarusHair1.anm2" type="none" priority="99" />
-	<costume anm2path="Character_LazarusHair2.anm2" type="none" priority="99" />
-	<costume anm2path="Character_LilithHair.anm2" type="none" priority="99" />
-	<costume anm2path="Character_015_ApollyonBody.anm2" type="none" priority="1" />
-	<costume anm2path="Character_016_TheForgottenBody.anm2" type="none" priority="-1" />
+	<costume anm2path="character_003_cainseyepatch.anm2" type="none" priority="99" />
+	<costume anm2path="character_004_judasfez.anm2" type="none" priority="99" />
+	<costume anm2path="character_005_evehead.anm2" type="none" priority="99" hasskinalt="true" />
+	<costume anm2path="character_007_samsonhead.anm2" type="none" priority="99" />
+	<costume anm2path="character_008_azazelhead.anm2" type="none" priority="23" skincolor="1" isFlying="true" overwritecolor="true" />
+	<costume anm2path="character_009_edenhair1.anm2" type="none" priority="99" />
+	<costume anm2path="character_lazarushair1.anm2" type="none" priority="99" />
+	<costume anm2path="character_lazarushair2.anm2" type="none" priority="99" />
+	<costume anm2path="character_lilithhair.anm2" type="none" priority="99" />
+	<costume anm2path="character_015_apollyonbody.anm2" type="none" priority="1" />
+	<costume anm2path="character_016_theforgottenbody.anm2" type="none" priority="-1" />
+	<costume anm2path="character_001x_bethanyhead.anm2" type="none" priority="99" />
+	<costume anm2path="character_002x_jacobhead.anm2" type="none" priority="99" />
+	<costume anm2path="character_003x_esauhead.anm2" type="none" priority="99" />
 </costumes>
