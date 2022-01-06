@@ -5,6 +5,8 @@ local RebirthOrder = {"Isaac", "Magdalene", "Cain", "Judas", "???"," Eve", "Sams
 local RebirthSettings = {}
 local ABRepOrder = {"Lilith", "Keeper", "Apollyon", "The Forgotten", "Bethany", "J&E"}
 local ABRepSettings = {}
+local PLayerColors = {0, 0, 0, 0}
+local ColorToStr = {"", "_black", "_blue", "_red", "_green", "_grey"}
 
 ---------------------------------------------------------------
 ------------------------Mod Config Menu------------------------
@@ -98,11 +100,23 @@ FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.OnGa
 
 ---------------------------------------------------------------
 ------------------------------Main-----------------------------
-function ChangeCharacter(sprite, path)
+function ChangeSprite(sprite, path)
     for i = 0, 12 do
         sprite:ReplaceSpritesheet(i, path)
     end
     sprite:ReplaceSpritesheet(14, path)
+end
+
+function LoadCharacter(player, char, color)
+    if color < 0 or color > 5 then
+        color = 0
+    end
+    player:GetSprite():Load("gfx1/001.000_player.anm2", false)
+    ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 1] .. ".png")
+    player:GetSprite():LoadGraphics()
+    if char.Costume ~= nil then
+        player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume))
+    end
 end
 
 local characters = {
@@ -110,34 +124,34 @@ local characters = {
         Enabled = function ()
             return RebirthSettings["Isaac"]
         end,
-        Sprite = "character_001_isaac.png"
+        Sprite = "character_001_isaac"
     },
     [PlayerType.PLAYER_MAGDALENA] = {
         Enabled = function ()
             return RebirthSettings["Isaac"]
         end,
-        Sprite = "character_002_magdalene.png",
+        Sprite = "character_002_magdalene",
         Costume = "character_002_magdalenehead.anm2"
     },
     [PlayerType.PLAYER_LILITH] = {
         Enabled = function ()
             return ABRepSettings["Lilith"]
         end,
-        Sprite = "character_014_lilith.png",
+        Sprite = "character_014_lilith",
         Costume = "character_lilithhair.anm2"
     },
     [PlayerType.PLAYER_JACOB] = {
         Enabled = function ()
             return ABRepSettings["J&E"]
         end,
-        Sprite = "character_002x_jacob.png",
+        Sprite = "character_002x_jacob",
         Costume = "character_002x_jacobhead.anm2"
     },
     [PlayerType.PLAYER_ESAU] = {
         Enabled = function ()
             return ABRepSettings["J&E"]
         end,
-        Sprite = "character_003x_esau.png",
+        Sprite = "character_003x_esau",
         Costume = "character_003x_esauhead.anm2"
     },
 }
@@ -145,13 +159,19 @@ local characters = {
 function FurriesOfIsaac:onPlayerInit(player)
     for type, char in pairs(characters) do
         if player:GetPlayerType() == type and char.Enabled() then
-            player:GetSprite():Load("gfx1/001.000_player.anm2", false)
-            ChangeCharacter(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite)
-            player:GetSprite():LoadGraphics()
-            if char.Costume ~= nil then
-                player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume))
-            end
+            LoadCharacter(player, char, player:GetBodyColor())
         end
     end
 end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.onPlayerInit)
+
+function FurriesOfIsaac:onChangeColor(player)
+    for i = 0, Game():GetNumPlayers() do
+        local player = Game():GetPlayer(i)
+        if PLayerColors[i] ~= player:GetBodyColor() then
+            PLayerColors[i] = player:GetBodyColor()
+            LoadCharacter(player, characters[player:GetPlayerType()], player:GetBodyColor())
+        end
+    end
+end
+FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_UPDATE, FurriesOfIsaac.onChangeColor)
