@@ -165,10 +165,10 @@ function FurriesOfIsaac:onPlayerInit(player)
 end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.onPlayerInit)
 
-function FurriesOfIsaac:onChangeColor(player)
+function FurriesOfIsaac:onChangeColor()
     for i = 0, Game():GetNumPlayers() do
         local player = Game():GetPlayer(i)
-        if PLayerColors[i] ~= player:GetBodyColor() then
+        if (RebirthSettings[player:GetPlayerType()] or ABRepSettings[player:GetPlayerType()]) and PLayerColors[i] ~= player:GetBodyColor() then
             PLayerColors[i] = player:GetBodyColor()
             LoadCharacter(player, characters[player:GetPlayerType()], player:GetBodyColor())
         end
