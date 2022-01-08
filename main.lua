@@ -1,4 +1,4 @@
-local FurriesOfIsaac = RegisterMod("Furries of Isaac", 1)
+local FurriesOfIsaac = RegisterMod("FurriesOfIsaac", 1)
 local SaveState = {}
 
 local RebirthOrder = {"Isaac", "Magdalene", "Cain", "Judas", "???"," Eve", "Samson", "Azazel", "Lazarus", "Eden", "The Lost"}
@@ -7,6 +7,7 @@ local ABRepOrder = {"Lilith", "Keeper", "Apollyon", "The Forgotten", "Bethany", 
 local ABRepSettings = {}
 local PLayerColors = {0, 0, 0, 0}
 local ColorToStr = {"", "_black", "_blue", "_red", "_green", "_grey"}
+local PogEnabled = true
 
 ---------------------------------------------------------------
 ------------------------Mod Config Menu------------------------
@@ -53,6 +54,24 @@ function FurriesOfIsaac:ModConfigInit()
                     end
                 })
         end
+
+        ModConfigMenu.AddSetting(ModName, "Misc",
+            {
+                Type = ModConfigMenu.OptionType.BOOLEAN,
+                CurrentSetting = function()
+                    return PogEnabled
+                end,
+                Display = function()
+                    local onOff = "False"
+                    if PogEnabled then
+                        onOff = "True"
+                    end
+                    return "Custom POG animations: " .. onOff
+                end,
+                OnChange = function(currentBool)
+                    PogEnabled = currentBool
+                end
+            })
     end
 end
 FurriesOfIsaac:ModConfigInit()
@@ -64,6 +83,7 @@ local json = require("json")
 function FurriesOfIsaac:SaveGame()
 	SaveState.Rebirth = {}
 	SaveState.ABRep = {}
+    SaveState.PogEnabled = PogEnabled
 	for i, v in ipairs(RebirthOrder) do
 		SaveState.Rebirth[i] = RebirthSettings[v]
 	end
@@ -85,6 +105,7 @@ function FurriesOfIsaac:OnGameStart(isSave)
             for i, v in pairs(SaveState.ABRep) do
                 ABRepSettings[ABRepOrder[i]] = v
             end
+            PogEnabled = SaveState.PogEnabled
         else
             for i, v in pairs(RebirthOrder) do
                 RebirthSettings[v] = true
