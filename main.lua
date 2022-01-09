@@ -1,13 +1,59 @@
 local FurriesOfIsaac = RegisterMod("FurriesOfIsaac", 1)
 local SaveState = {}
 
-local RebirthOrder = {"Isaac", "Magdalene", "Cain", "Judas", "???"," Eve", "Samson", "Azazel", "Lazarus", "Eden", "The Lost"}
+local RebirthOrder = {"Isaac", "Magdalene", "Cain", "Judas", "???", "Eve", "Samson", "Azazel", "Lazarus", "Eden", "The Lost"}
 local RebirthSettings = {}
 local ABRepOrder = {"Lilith", "Keeper", "Apollyon", "The Forgotten", "Bethany", "J&E"}
 local ABRepSettings = {}
-local PLayerColors = {0, 0, 0, 0}
+local DefaultColors = {}
+local PlayerColor = {-2, -2, -2, -2}
 local ColorToStr = {"", "_black", "_blue", "_red", "_green", "_grey"}
 local PogEnabled = true
+
+local TypeToName = {
+    [PlayerType.PLAYER_ISAAC] = "Isaac",
+    [PlayerType.PLAYER_MAGDALENA] = "Magdalena",
+    [PlayerType.PLAYER_CAIN] = "Cain",
+    [PlayerType.PLAYER_JUDAS] = "Judas",
+    [PlayerType.PLAYER_BLACKJUDAS] = "Judas",
+    [PlayerType.PLAYER_XXX] = "???",
+    [PlayerType.PLAYER_EVE] = "Eve",
+    [PlayerType.PLAYER_SAMSON] = "Samson",
+    [PlayerType.PLAYER_AZAZEL] = "Azazel",
+    [PlayerType.PLAYER_LAZARUS] = "Lazarus",
+    [PlayerType.PLAYER_LAZARUS2] = "Lazarus",
+    [PlayerType.PLAYER_EDEN] = "Eden",
+    [PlayerType.PLAYER_THELOST] = "The Lost",
+    [PlayerType.PLAYER_LILITH] = "Lilith",
+    [PlayerType.PLAYER_KEEPER] = "Keeper",
+    [PlayerType.PLAYER_APOLLYON] = "Apollyon",
+    [PlayerType.PLAYER_THEFORGOTTEN] = "The Forgotten",
+    [PlayerType.PLAYER_THESOUL] = "The Forgotten",
+    [PlayerType.PLAYER_BETHANY] = "Bethany",
+    [PlayerType.PLAYER_JACOB] = "J&E",
+    [PlayerType.PLAYER_ESAU] = "J&E",
+
+    [PlayerType.PLAYER_ISAAC_B] = "Isaac",
+    [PlayerType.PLAYER_MAGDALENA_B] = "Magdalena",
+    [PlayerType.PLAYER_CAIN_B] = "Cain",
+    [PlayerType.PLAYER_JUDAS_B] = "Judas",
+    [PlayerType.PLAYER_XXX_B] = "???",
+    [PlayerType.PLAYER_EVE_B] = "Eve",
+    [PlayerType.PLAYER_SAMSON_B] = "Samson",
+    [PlayerType.PLAYER_AZAZEL_B] = "Azazel",
+    [PlayerType.PLAYER_LAZARUS_B] = "Lazarus",
+    [PlayerType.PLAYER_LAZARUS2_B] = "Lazarus",
+    [PlayerType.PLAYER_EDEN_B] = "Eden",
+    [PlayerType.PLAYER_THELOST_B] = "The Lost",
+    [PlayerType.PLAYER_LILITH_B] = "Lilith",
+    [PlayerType.PLAYER_KEEPER_B] = "Keeper",
+    [PlayerType.PLAYER_APOLLYON_B] = "Apollyon",
+    [PlayerType.PLAYER_THEFORGOTTEN_B] = "The Forgotten",
+    [PlayerType.PLAYER_THESOUL_B] = "The Forgotten",
+    [PlayerType.PLAYER_BETHANY_B] = "Bethany",
+    [PlayerType.PLAYER_JACOB_B] = "J&E",
+    [PlayerType.PLAYER_JACOB2_B] = "J&E"
+}
 
 ---------------------------------------------------------------
 ------------------------Mod Config Menu------------------------
@@ -55,6 +101,42 @@ function FurriesOfIsaac:ModConfigInit()
                 })
         end
 
+        local allColor = {"standart", "black", "blue", "red", "green", "grey"}
+        for _, i in ipairs(RebirthOrder) do
+            ModConfigMenu.AddSetting(ModName, "Default colors",
+                {
+                    Type = ModConfigMenu.OptionType.NUMBER,
+                    CurrentSetting = function()
+                        return DefaultColors[i]
+                    end,
+                    Display = function()
+                        return i .. ": " .. allColor[DefaultColors[i] + 1]
+                    end,
+                    Minimum = 0,
+                    Maximum = 5,
+                    OnChange = function(currentNum)
+                        DefaultColors[i] = currentNum
+                    end
+                })
+        end
+        for _, i in ipairs(ABRepOrder) do
+            ModConfigMenu.AddSetting(ModName, "Default colors",
+                {
+                    Type = ModConfigMenu.OptionType.NUMBER,
+                    CurrentSetting = function()
+                        return DefaultColors[i]
+                    end,
+                    Display = function()
+                        return i .. ": " .. allColor[DefaultColors[i] + 1]
+                    end,
+                    Minimum = 0,
+                    Maximum = 5,
+                    OnChange = function(currentNum)
+                        DefaultColors[i] = currentNum
+                    end
+                })
+        end
+
         ModConfigMenu.AddSetting(ModName, "Misc",
             {
                 Type = ModConfigMenu.OptionType.BOOLEAN,
@@ -83,6 +165,7 @@ local json = require("json")
 function FurriesOfIsaac:SaveGame()
 	SaveState.Rebirth = {}
 	SaveState.ABRep = {}
+    SaveState.DefaultColors = DefaultColors
     SaveState.PogEnabled = PogEnabled
 	for i, v in ipairs(RebirthOrder) do
 		SaveState.Rebirth[i] = RebirthSettings[v]
@@ -95,7 +178,7 @@ end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_PRE_GAME_EXIT, FurriesOfIsaac.SaveGame)
 
 local loaded = false
-function FurriesOfIsaac:OnGameStart(isSave)
+function FurriesOfIsaac:LoadSave()
     if not loaded then
         if FurriesOfIsaac:HasData() then
             SaveState = json.decode(FurriesOfIsaac:LoadData())
@@ -106,18 +189,21 @@ function FurriesOfIsaac:OnGameStart(isSave)
                 ABRepSettings[ABRepOrder[i]] = v
             end
             PogEnabled = SaveState.PogEnabled
+            DefaultColors = SaveState.DefaultColors
         else
-            for i, v in pairs(RebirthOrder) do
+            for i, v in ipairs(RebirthOrder) do
                 RebirthSettings[v] = true
+                DefaultColors[v] = 0
             end
-            for i, v in pairs(ABRepOrder) do
+            for i, v in ipairs(ABRepOrder) do
                 ABRepSettings[v] = true
+                DefaultColors[v] = 0
             end
         end
         loaded = true
     end
 end
-FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.OnGameStart)
+FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.LoadSave)
 
 ---------------------------------------------------------------
 ------------------------------Main-----------------------------
@@ -130,7 +216,7 @@ end
 
 function LoadCharacter(player, char, color)
     if color < 0 or color > 5 then
-        color = 0
+        color = DefaultColors[TypeToName[player:GetPlayerType()]]
     end
     player:GetSprite():Load("gfx1/001.000_player.anm2", false)
     ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 1] .. ".png")
@@ -149,7 +235,7 @@ local characters = {
     },
     [PlayerType.PLAYER_MAGDALENA] = {
         Enabled = function ()
-            return RebirthSettings["Isaac"]
+            return RebirthSettings["Magdalene"]
         end,
         Sprite = "character_002_magdalene",
         Costume = "character_002_magdalenehead.anm2"
@@ -189,10 +275,22 @@ FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.onPl
 function FurriesOfIsaac:onChangeColor()
     for i = 0, Game():GetNumPlayers() do
         local player = Game():GetPlayer(i)
-        if (RebirthSettings[player:GetPlayerType()] or ABRepSettings[player:GetPlayerType()]) and PLayerColors[i] ~= player:GetBodyColor() then
-            PLayerColors[i] = player:GetBodyColor()
-            LoadCharacter(player, characters[player:GetPlayerType()], player:GetBodyColor())
+        if (RebirthSettings[TypeToName[player:GetPlayerType()]] or ABRepSettings[TypeToName[player:GetPlayerType()]]) and PlayerColor[i] ~= player:GetBodyColor() then
+            local color1 = player:GetBodyColor()
+            if PlayerColor[i] == -2 then
+                color1 = DefaultColors[TypeToName[player:GetPlayerType()]]
+                Isaac.ConsoleOutput(color1)
+            end
+            PlayerColor[i] = color1
+            LoadCharacter(player, characters[player:GetPlayerType()], color1)
         end
     end
 end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_UPDATE, FurriesOfIsaac.onChangeColor)
+
+function FurriesOfIsaac:onGameStart(IsContinued)
+    if not IsContinued then
+        PlayerColor = {-2, -2, -2, -2}
+    end
+end
+FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, FurriesOfIsaac.onGameStart)
