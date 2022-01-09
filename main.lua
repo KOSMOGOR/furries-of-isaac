@@ -1,10 +1,14 @@
 local FurriesOfIsaac = RegisterMod("FurriesOfIsaac", 1)
 local SaveState = {}
+local function has_value(tab, val)
+    for index, value in ipairs(tab) do if value == val then return true end end return false
+end
 
 local RebirthOrder = {"Isaac", "Magdalene", "Cain", "Judas", "???", "Eve", "Samson", "Azazel", "Lazarus", "Eden", "The Lost"}
 local RebirthSettings = {}
 local ABRepOrder = {"Lilith", "Keeper", "Apollyon", "The Forgotten", "Bethany", "J&E"}
 local ABRepSettings = {}
+local colorCharacters = {"Isaac", "Magdalena", "Cain", "Judas", "Eve", "Samson", "Eden", "Lazarus", "Bethany", "J&E"}
 local DefaultColors = {}
 local PlayerColor = {-2, -2, -2, -2}
 local ColorToStr = {"", "_black", "_blue", "_red", "_green", "_grey"}
@@ -102,24 +106,7 @@ function FurriesOfIsaac:ModConfigInit()
         end
 
         local allColor = {"standart", "black", "blue", "red", "green", "grey"}
-        for _, i in ipairs(RebirthOrder) do
-            ModConfigMenu.AddSetting(ModName, "Default colors",
-                {
-                    Type = ModConfigMenu.OptionType.NUMBER,
-                    CurrentSetting = function()
-                        return DefaultColors[i]
-                    end,
-                    Display = function()
-                        return i .. ": " .. allColor[DefaultColors[i] + 1]
-                    end,
-                    Minimum = 0,
-                    Maximum = 5,
-                    OnChange = function(currentNum)
-                        DefaultColors[i] = currentNum
-                    end
-                })
-        end
-        for _, i in ipairs(ABRepOrder) do
+        for _, i in ipairs(colorCharacters) do
             ModConfigMenu.AddSetting(ModName, "Default colors",
                 {
                     Type = ModConfigMenu.OptionType.NUMBER,
@@ -193,10 +180,11 @@ function FurriesOfIsaac:LoadSave()
         else
             for i, v in ipairs(RebirthOrder) do
                 RebirthSettings[v] = true
-                DefaultColors[v] = 0
             end
             for i, v in ipairs(ABRepOrder) do
                 ABRepSettings[v] = true
+            end
+            for i, v in ipairs(colorCharacters) do
                 DefaultColors[v] = 0
             end
         end
@@ -219,7 +207,11 @@ function LoadCharacter(player, char, color)
         color = DefaultColors[TypeToName[player:GetPlayerType()]]
     end
     player:GetSprite():Load("gfx1/001.000_player.anm2", false)
-    ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 1] .. ".png")
+    if has_value(colorCharacters, TypeToName[player:GetPlayerType()]) then
+        ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 1] .. ".png")
+    else
+        ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ".png")
+    end
     player:GetSprite():LoadGraphics()
     if char.Costume ~= nil then
         player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume))
@@ -275,11 +267,10 @@ FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.onPl
 function FurriesOfIsaac:onChangeColor()
     for i = 0, Game():GetNumPlayers() do
         local player = Game():GetPlayer(i)
-        if (RebirthSettings[TypeToName[player:GetPlayerType()]] or ABRepSettings[TypeToName[player:GetPlayerType()]]) and PlayerColor[i] ~= player:GetBodyColor() then
+        if characters[player:GetPlayerType()] and characters[player:GetPlayerType()].Enabled() and has_value(colorCharacters, TypeToName[player:GetPlayerType()]) and PlayerColor[i] ~= player:GetBodyColor() then
             local color1 = player:GetBodyColor()
             if PlayerColor[i] == -2 then
                 color1 = DefaultColors[TypeToName[player:GetPlayerType()]]
-                Isaac.ConsoleOutput(color1)
             end
             PlayerColor[i] = color1
             LoadCharacter(player, characters[player:GetPlayerType()], color1)
