@@ -10,7 +10,7 @@ local ABRepOrder = {"Lilith", "Keeper", "Apollyon", "The Forgotten", "Bethany", 
 local ABRepSettings = {}
 local colorCharacters = {"Isaac", "Magdalena", "Cain", "Judas", "Eve", "Samson", "Eden", "Lazarus", "Bethany", "J&E"}
 local DefaultColors = {}
-local PlayerColor = {-2, -2, -2, -2}
+local PlayerColor = {-2, -2, -2, -2, -2, -2, -2, -2}
 local ColorToStr = {"", "_black", "_blue", "_red", "_green", "_grey"}
 local PogEnabled = true
 
@@ -265,15 +265,20 @@ end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.onPlayerInit)
 
 function FurriesOfIsaac:onChangeColor()
-    for i = 0, Game():GetNumPlayers() do
+    for i = 0, 7 do
         local player = Game():GetPlayer(i)
-        if characters[player:GetPlayerType()] and characters[player:GetPlayerType()].Enabled() and has_value(colorCharacters, TypeToName[player:GetPlayerType()]) and PlayerColor[i] ~= player:GetBodyColor() then
+        if player == nil then
+            break
+        end
+        if characters[player:GetPlayerType()] and characters[player:GetPlayerType()].Enabled() and has_value(colorCharacters, TypeToName[player:GetPlayerType()]) and PlayerColor[i + 1] ~= player:GetBodyColor() then
             local color1 = player:GetBodyColor()
-            if PlayerColor[i] == -2 then
+            if PlayerColor[i + 1] == -2 then
                 color1 = DefaultColors[TypeToName[player:GetPlayerType()]]
             end
-            PlayerColor[i] = color1
-            LoadCharacter(player, characters[player:GetPlayerType()], color1)
+            PlayerColor[i + 1] = color1
+            if player:GetBodyColor() ~= color1 then
+                LoadCharacter(player, characters[player:GetPlayerType()], color1)
+            end
         end
     end
 end
@@ -281,7 +286,7 @@ FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_UPDATE, FurriesOfIsaac.onChangeC
 
 function FurriesOfIsaac:onGameStart(IsContinued)
     if not IsContinued then
-        PlayerColor = {-2, -2, -2, -2}
+        PlayerColor = {-2, -2, -2, -2, -2, -2, -2, -2}
     end
 end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, FurriesOfIsaac.onGameStart)
