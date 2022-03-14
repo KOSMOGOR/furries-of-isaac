@@ -11,7 +11,7 @@ local ABRepSettings = {}
 local colorCharacters = {"Isaac", "Magdalena", "Cain", "Judas", "Eve", "Samson", "Eden", "Lazarus", "Bethany", "J&E"}
 local DefaultColors = {}
 local PlayerColor = {-2, -2, -2, -2, -2, -2, -2, -2}
-local ColorToStr = {"", "_black", "_blue", "_red", "_green", "_grey"}
+local ColorToStr = {"", "_white", "_black", "_blue", "_red", "_green", "_grey"}
 local PogEnabled = true
 
 local TypeToName = {
@@ -105,7 +105,7 @@ function FurriesOfIsaac:ModConfigInit()
                 })
         end
 
-        local allColor = {"standart", "black", "blue", "red", "green", "grey"}
+        local allColor = {"standart", "white", "black", "blue", "red", "green", "grey"}
         for _, i in ipairs(colorCharacters) do
             ModConfigMenu.AddSetting(ModName, "Default colors",
                 {
@@ -114,9 +114,9 @@ function FurriesOfIsaac:ModConfigInit()
                         return DefaultColors[i]
                     end,
                     Display = function()
-                        return i .. ": " .. allColor[DefaultColors[i] + 1]
+                        return i .. ": " .. allColor[DefaultColors[i] + 2]
                     end,
-                    Minimum = 0,
+                    Minimum = -1,
                     Maximum = 5,
                     OnChange = function(currentNum)
                         DefaultColors[i] = currentNum
@@ -185,7 +185,7 @@ function FurriesOfIsaac:LoadSave()
                 ABRepSettings[v] = true
             end
             for i, v in ipairs(colorCharacters) do
-                DefaultColors[v] = 0
+                DefaultColors[v] = -1
             end
         end
         loaded = true
@@ -203,12 +203,12 @@ function ChangeSprite(sprite, path)
 end
 
 function LoadCharacter(player, char, color)
-    if color < 0 or color > 5 then
+    if color < -1 or color > 5 then
         color = DefaultColors[TypeToName[player:GetPlayerType()]]
     end
     player:GetSprite():Load("gfx1/001.000_player.anm2", false)
     if has_value(colorCharacters, TypeToName[player:GetPlayerType()]) then
-        ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 1] .. ".png")
+        ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 2] .. ".png")
     else
         ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ".png")
     end
@@ -258,27 +258,23 @@ local characters = {
 function FurriesOfIsaac:onPlayerInit(player)
     for type, char in pairs(characters) do
         if player:GetPlayerType() == type and char.Enabled() then
-            LoadCharacter(player, char, player:GetBodyColor())
+            LoadCharacter(player, char, DefaultColors[TypeToName[player:GetPlayerType()]])
         end
     end
 end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_PLAYER_INIT, FurriesOfIsaac.onPlayerInit)
 
 function FurriesOfIsaac:onChangeColor()
-    for i = 0, 7 do
+    for i = 0, Game():GetNumPlayers() - 1 do
         local player = Game():GetPlayer(i)
         if player == nil then
             break
         end
         if characters[player:GetPlayerType()] and characters[player:GetPlayerType()].Enabled() and has_value(colorCharacters, TypeToName[player:GetPlayerType()]) and PlayerColor[i + 1] ~= player:GetBodyColor() then
-            local color1 = player:GetBodyColor()
-            if PlayerColor[i + 1] == -2 then
-                color1 = DefaultColors[TypeToName[player:GetPlayerType()]]
+            if player:GetBodyColor() ~= PlayerColor[i + 1] then
+                LoadCharacter(player, characters[player:GetPlayerType()], DefaultColors[TypeToName[player:GetPlayerType()]])
             end
-            PlayerColor[i + 1] = color1
-            if player:GetBodyColor() ~= color1 then
-                LoadCharacter(player, characters[player:GetPlayerType()], color1)
-            end
+            PlayerColor[i + 1] = player:GetBodyColor()
         end
     end
 end
