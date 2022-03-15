@@ -1,4 +1,6 @@
 local FurriesOfIsaac = RegisterMod("FurriesOfIsaac", 1)
+local CostumeProtector = include("characterCostumeProtector")
+CostumeProtector:Init(FurriesOfIsaac)
 local SaveState = {}
 local function has_value(tab, val)
     for index, value in ipairs(tab) do if value == val then return true end end return false
@@ -259,6 +261,22 @@ function FurriesOfIsaac:onPlayerInit(player)
     for type, char in pairs(characters) do
         if player:GetPlayerType() == type and char.Enabled() then
             LoadCharacter(player, char, DefaultColors[TypeToName[player:GetPlayerType()]])
+            if char.Costume ~= nil then
+                CostumeProtector:AddPlayer(
+                    player,
+                    type,
+                    "gfx1/characters/costumes/" .. char.Sprite,
+                    nil,
+                    nil,
+                    Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume)
+                )
+            else
+                CostumeProtector:AddPlayer(
+                    player,
+                    type,
+                    "gfx1/characters/costumes/" .. char.Sprite
+                )
+            end
         end
     end
 end
@@ -286,3 +304,6 @@ function FurriesOfIsaac:onGameStart(IsContinued)
     end
 end
 FurriesOfIsaac:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, FurriesOfIsaac.onGameStart)
+CostumeProtector.AddCallback("MC_POST_COSTUME_RESET", function (player)
+    LoadCharacter(player, characters[player:GetPlayerType()], DefaultColors[TypeToName[player:GetPlayerType()]])
+end)
