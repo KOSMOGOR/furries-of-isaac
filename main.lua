@@ -107,7 +107,7 @@ function FurriesOfIsaac:ModConfigInit()
                 })
         end
 
-        local allColor = {"standart", "white", "black", "blue", "red", "green", "grey"}
+        local allColor = {"standard", "white", "black", "blue", "red", "green", "grey"}
         for _, i in ipairs(colorCharacters) do
             ModConfigMenu.AddSetting(ModName, "Default colors",
                 {
@@ -225,7 +225,8 @@ local characters = {
         Enabled = function ()
             return RebirthSettings["Isaac"]
         end,
-        Sprite = "character_001_isaac"
+        Sprite = "character_001_isaac",
+		Costume = "costume_isaac.anm2"
     },
     [PlayerType.PLAYER_MAGDALENA] = {
         Enabled = function ()
