@@ -1,4 +1,5 @@
 <costumes anm2root="gfx1/characters/">
+	<costume anm2path="costume_isaac.anm2" type="none" priority="99" />
 	<costume anm2path="character_002_magdalenehead.anm2" type="none" priority="99" />
 	<costume anm2path="character_003_cainseyepatch.anm2" type="none" priority="99" />
 	<costume anm2path="character_004_judasfez.anm2" type="none" priority="99" />
