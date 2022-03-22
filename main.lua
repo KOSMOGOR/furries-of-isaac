@@ -233,7 +233,7 @@ local characters = {
             return RebirthSettings["Magdalene"]
         end,
         Sprite = "character_002_magdalene",
-        Costume = "character_002_magdalenehead.anm2"
+        Costume = "costume_maggy.anm2"
     },
     [PlayerType.PLAYER_LILITH] = {
         Enabled = function ()
