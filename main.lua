@@ -216,7 +216,13 @@ function LoadCharacter(player, char, color)
     end
     player:GetSprite():LoadGraphics()
     if char.Costume ~= nil then
-        player:AddNullCostume(Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume))
+        for _, c in ipairs(char.Costume) do
+            local costume = Isaac.GetCostumeIdByPath("gfx1/characters/" .. c .. ".anm2")
+            local itemConfig = Isaac.GetItemConfig():GetNullItem(costume)
+            local costumePath = "gfx1/characters/costumes/" .. c
+            player:AddNullCostume(costume)
+            player:ReplaceCostumeSprite(itemConfig, costumePath .. ColorToStr[color + 2] .. ".png", 0)
+        end
     end
 end
 
@@ -226,35 +232,35 @@ local characters = {
             return RebirthSettings["Isaac"]
         end,
         Sprite = "character_001_isaac",
-		Costume = "costume_isaac.anm2"
+		Costume = {"costume_isaac_body", "costume_isaac_head"}
     },
     [PlayerType.PLAYER_MAGDALENA] = {
         Enabled = function ()
             return RebirthSettings["Magdalene"]
         end,
         Sprite = "character_002_magdalene",
-        Costume = "costume_maggy.anm2"
+        Costume = {"costume_maggy"}
     },
     [PlayerType.PLAYER_LILITH] = {
         Enabled = function ()
             return ABRepSettings["Lilith"]
         end,
         Sprite = "character_014_lilith",
-        Costume = "character_lilithhair.anm2"
+        Costume = {"character_lilithhair"}
     },
     [PlayerType.PLAYER_JACOB] = {
         Enabled = function ()
             return ABRepSettings["J&E"]
         end,
         Sprite = "character_002x_jacob",
-        Costume = "character_002x_jacobhead.anm2"
+        Costume = {"character_002x_jacobhead"}
     },
     [PlayerType.PLAYER_ESAU] = {
         Enabled = function ()
             return ABRepSettings["J&E"]
         end,
         Sprite = "character_003x_esau",
-        Costume = "character_003x_esauhead.anm2"
+        Costume = {"character_003x_esauhead"}
     },
 }
 
@@ -262,14 +268,14 @@ function FurriesOfIsaac:onPlayerInit(player)
     for type, char in pairs(characters) do
         if player:GetPlayerType() == type and char.Enabled() then
             LoadCharacter(player, char, DefaultColors[TypeToName[player:GetPlayerType()]])
-            if char.Costume ~= nil then
+            --[[if char.Costume ~= nil then
                 CostumeProtector:AddPlayer(
                     player,
                     type,
                     "gfx1/characters/costumes/" .. char.Sprite,
                     nil,
                     nil,
-                    Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume)
+                    Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume .. ".anm2")
                 )
             else
                 CostumeProtector:AddPlayer(
@@ -277,7 +283,7 @@ function FurriesOfIsaac:onPlayerInit(player)
                     type,
                     "gfx1/characters/costumes/" .. char.Sprite
                 )
-            end
+            end]]
         end
     end
 end
