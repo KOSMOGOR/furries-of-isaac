@@ -253,14 +253,14 @@ local characters = {
             return ABRepSettings["J&E"]
         end,
         Sprite = "character_002x_jacob",
-        Costume = {"character_002x_jacobhead"}
+        Costume = {"character_002x_jacobhair"}
     },
     [PlayerType.PLAYER_ESAU] = {
         Enabled = function ()
             return ABRepSettings["J&E"]
         end,
         Sprite = "character_003x_esau",
-        Costume = {"character_003x_esauhead"}
+        Costume = {"character_003x_esauhair"}
     },
 }
 
@@ -268,22 +268,11 @@ function FurriesOfIsaac:onPlayerInit(player)
     for type, char in pairs(characters) do
         if player:GetPlayerType() == type and char.Enabled() then
             LoadCharacter(player, char, DefaultColors[TypeToName[player:GetPlayerType()]])
-            --[[if char.Costume ~= nil then
-                CostumeProtector:AddPlayer(
-                    player,
-                    type,
-                    "gfx1/characters/costumes/" .. char.Sprite,
-                    nil,
-                    nil,
-                    Isaac.GetCostumeIdByPath("gfx1/characters/" .. char.Costume .. ".anm2")
-                )
-            else
-                CostumeProtector:AddPlayer(
-                    player,
-                    type,
-                    "gfx1/characters/costumes/" .. char.Sprite
-                )
-            end]]
+            CostumeProtector:AddPlayer(
+                player,
+                type,
+                "gfx1/characters/costumes/" .. char.Sprite
+            )
         end
     end
 end

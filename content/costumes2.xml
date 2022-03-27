@@ -15,6 +15,6 @@
 	<costume anm2path="character_015_apollyonbody.anm2" type="none" priority="1" />
 	<costume anm2path="character_016_theforgottenbody.anm2" type="none" priority="-1" />
 	<costume anm2path="character_001x_bethanyhead.anm2" type="none" priority="99" />
-	<costume anm2path="character_002x_jacobhead.anm2" type="none" priority="99" />
-	<costume anm2path="character_003x_esauhead.anm2" type="none" priority="99" />
+	<costume anm2path="character_002x_jacobhair.anm2" type="none" priority="99" />
+	<costume anm2path="character_003x_esauhair.anm2" type="none" priority="99" />
 </costumes>
