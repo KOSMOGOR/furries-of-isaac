@@ -205,15 +205,13 @@ function ChangeSprite(sprite, path)
 end
 
 function LoadCharacter(player, char, color)
-    if color < -1 or color > 5 then
+    if type(color) == "nil" then
+        color = -1
+    elseif color < -1 or color > 5 then
         color = DefaultColors[TypeToName[player:GetPlayerType()]]
     end
     player:GetSprite():Load("gfx1/001.000_player.anm2", false)
-    if has_value(colorCharacters, TypeToName[player:GetPlayerType()]) then
-        ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 2] .. ".png")
-    else
-        ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ".png")
-    end
+    ChangeSprite(player:GetSprite(), "gfx1/characters/costumes/" .. char.Sprite .. ColorToStr[color + 2] .. ".png")
     player:GetSprite():LoadGraphics()
     if char.Costume ~= nil then
         for _, c in ipairs(char.Costume) do
@@ -239,14 +237,14 @@ local characters = {
             return RebirthSettings["Magdalene"]
         end,
         Sprite = "character_002_magdalene",
-        Costume = {"costume_maggy"}
+        Costume = {"costume_maggy_body", "costume_maggy_head"}
     },
     [PlayerType.PLAYER_LILITH] = {
         Enabled = function ()
             return ABRepSettings["Lilith"]
         end,
         Sprite = "character_014_lilith",
-        Costume = {"character_lilithhair"}
+        Costume = {"costume_lilith_hair"}
     },
     [PlayerType.PLAYER_JACOB] = {
         Enabled = function ()

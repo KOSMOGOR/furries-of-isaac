@@ -1,8 +1,8 @@
 <costumes anm2root="gfx1/characters/">
-	<costume anm2path="costume_isaac.anm2" type="none" priority="99" />
 	<costume anm2path="costume_isaac_body.anm2" type="none" priority="99" />
 	<costume anm2path="costume_isaac_head.anm2" type="none" priority="99" />
-	<costume anm2path="costume_maggy.anm2" type="none" priority="99" />
+	<costume anm2path="costume_maggy_body.anm2" type="none" priority="99" />
+	<costume anm2path="costume_maggy_head.anm2" type="none" priority="99" />
 	<costume anm2path="character_003_cainseyepatch.anm2" type="none" priority="99" />
 	<costume anm2path="character_004_judasfez.anm2" type="none" priority="99" />
 	<costume anm2path="character_005_evehead.anm2" type="none" priority="99" hasskinalt="true" />
@@ -11,7 +11,7 @@
 	<costume anm2path="character_009_edenhair1.anm2" type="none" priority="99" />
 	<costume anm2path="character_lazarushair1.anm2" type="none" priority="99" />
 	<costume anm2path="character_lazarushair2.anm2" type="none" priority="99" />
-	<costume anm2path="character_lilithhair.anm2" type="none" priority="99" />
+	<costume anm2path="costume_lilith_hair.anm2" type="none" priority="99" />
 	<costume anm2path="character_015_apollyonbody.anm2" type="none" priority="1" />
 	<costume anm2path="character_016_theforgottenbody.anm2" type="none" priority="-1" />
 	<costume anm2path="character_001x_bethanyhead.anm2" type="none" priority="99" />
