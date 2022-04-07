@@ -239,6 +239,20 @@ local characters = {
         Sprite = "character_002_magdalene",
         Costume = {"costume_maggy_body", "costume_maggy_head"}
     },
+	[PlayerType.PLAYER_CAIN] = {
+        Enabled = function ()
+            return RebirthSettings["Cain"]
+        end,
+        Sprite = "character_003_cain",
+        Costume = {"costume_cain_body", "costume_cain_head"}
+    },
+	[PlayerType.PLAYER_JUDAS] = {
+        Enabled = function ()
+            return RebirthSettings["Judas"]
+        end,
+        Sprite = "character_004_judas",
+        Costume = {"costume_judas_body", "costume_judas_head"}
+    },
     [PlayerType.PLAYER_LILITH] = {
         Enabled = function ()
             return ABRepSettings["Lilith"]
