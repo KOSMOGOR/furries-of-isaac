@@ -266,11 +266,11 @@ function FurriesOfIsaac:onPlayerInit(player)
     for type, char in pairs(characters) do
         if player:GetPlayerType() == type and char.Enabled() then
             LoadCharacter(player, char, DefaultColors[TypeToName[player:GetPlayerType()]])
-            CostumeProtector:AddPlayer(
+            --[[CostumeProtector:AddPlayer(
                 player,
                 type,
-                "gfx1/characters/costumes/" .. char.Sprite
-            )
+                "gfx1/characters/costumes/" .. char.Sprite .. ".png"
+            )]]
         end
     end
 end
